@@ -46,7 +46,6 @@ PRIORITY="local0.notice"                        # What to set logs to
 LOGFILE="/tmp/$MYNAME.log"                      # Physical log file
 
 SWITCHES="sw-3-1"                               # List of switches to backup
-BKPFILE="$switch.cnf.$(date +%m%d%y-%H%M)"      # Name of the backup file
 BKPHOSTS="dns01 dns02"                          # Hosts to backup to
 FAILHOSTS=""                                    # Running failure tally
 
@@ -194,6 +193,7 @@ logmsg "Starting on $(hostname)"
 # Iterate through the list of switches and back them up
 for switch in $SWITCHES; do
     logmsg "Backing up $switch"
+    BKPFILE="$switch.cnf.$(date +%m%d%y-%H%M)"      # Name of the backup file
 
     # Iterate through the backup hosts and do it
     for host in $BKPHOSTS; do
