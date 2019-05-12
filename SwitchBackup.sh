@@ -26,6 +26,10 @@
 #
 # ssh sw-3-1 "copy run tftp://dns01/test.cfg"
 #
+# - Make sure the switch is in the .ssh/config file with the correct settings
+# - SSH once to the switch from the backup machine to get the host key
+# - Make sure 'file prompt quiet' is set on the switch config
+#
 ###############################################################################
 #
 # TODO/ISSUES:
@@ -45,7 +49,7 @@ LOGGER="/usr/bin/logger"                        # logger location on disk
 PRIORITY="local0.notice"                        # What to set logs to
 LOGFILE="/tmp/$MYNAME.log"                      # Physical log file
 
-SWITCHES="sw-3-1"                               # List of switches to backup
+SWITCHES="sw-3-1 sw-3-2"                        # List of switches to backup
 BKPHOSTS="dns01 dns02"                          # Hosts to backup to
 FAILHOSTS=""                                    # Running failure tally
 
@@ -199,7 +203,7 @@ for switch in $SWITCHES; do
     for host in $BKPHOSTS; do
         logmsg "Backing up $BKPFILE to $host"
 
-        ${SSH} sw-3-1 copy running-config tftp://$host/$BKPFILE >> $LOGFILE 2>&1
+        ${SSH} $switch copy running-config tftp://$host/$BKPFILE >> $LOGFILE 2>&1
         RETVAL=$?
         if [[ $RETVAL != 0 ]]; then
             logmsg "Backup to $host failed" 
